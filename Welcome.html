@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Auction System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="background-container">
+        <img src="welcome.jpg" alt="Auction Background" class="background-image">
+    </div>
+    <div class="welcome-container">
+        <h1 class="welcome-title">Welcome to the Online Auction System</h1>
+        <p class="welcome-text">Buy and sell items in a secure auction environment.</p>
+        <div class="buttons">
+            <a href="auth.html?type=seller" class="btn seller-btn">I am a Seller</a>
+            <a href="auth.html?type=buyer" class="btn buyer-btn">I am a Buyer</a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const buttons = document.querySelectorAll(".btn");
+            buttons.forEach(button => {
+                button.addEventListener("mouseenter", () => {
+                    button.classList.add("floating");
+                });
+                button.addEventListener("mouseleave", () => {
+                    button.classList.remove("floating");
+                });
+            });
+        });
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .welcome-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .welcome-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .welcome-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        .seller-btn {
+            background: #ff5733;
+        }
+        .buyer-btn {
+            background: #3399ff;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+        }
+        .floating {
+            animation: floatEffect 1s ease-in-out;
+        }
+        @keyframes floatEffect {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</body>
+</html>
