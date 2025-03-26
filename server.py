@@ -8,7 +8,7 @@ CORS(app)
 # MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'  # Change if necessary
-app.config['MYSQL_PASSWORD'] = 'yourpassword'  # Change if necessary
+app.config['MYSQL_PASSWORD'] = '12345'  # Change if necessary
 app.config['MYSQL_DB'] = 'auction_db'
 
 mysql = MySQL(app)
