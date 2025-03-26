@@ -29,5 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const result = await response.json();
         alert(result.message || result.error);
+
+        // Redirect based on user type
+        if (result.success) {
+            if (result.role === 'seller') {
+                window.location.href = "seller_dashboard.html";
+            } else {
+                window.location.href = "buyer_dashboard.html";
+            }
+        }
     });
 });
