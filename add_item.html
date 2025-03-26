@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Auction Item</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="add_item.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: white;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #ff7eb3;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff5277;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Item for Auction</h1>
+        <form id="add-item-form">
+            <input type="text" id="product-name" placeholder="Product Name" required>
+            <input type="number" id="quantity" placeholder="Available Quantity" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <input type="text" id="address" placeholder="Address" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <input type="text" id="duration" placeholder="Auction Duration (in hours)" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

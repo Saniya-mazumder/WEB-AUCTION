@@ -1,31 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userType = urlParams.get("type") || "buyer";
-    const authTitle = document.getElementById("auth-title");
     const authForm = document.getElementById("auth-form");
     const toggleText = document.getElementById("toggle-text");
-    const toggleLink = document.getElementById("toggle-link");
-    
-    let isSignUp = false;
+    const authTitle = document.getElementById("auth-title");
 
-    function updateForm() {
-        authTitle.textContent = isSignUp ? `Sign Up as ${userType}` : `Sign In as ${userType}`;
-        toggleText.innerHTML = isSignUp 
-            ? `Already have an account? <a href="#" id="toggle-link">Sign In</a>`
-            : `Don't have an account? <a href="#" id="toggle-link">Sign Up</a>`;
-    }
+    let isSignUp = false;
 
     toggleText.addEventListener("click", function (event) {
         event.preventDefault();
         isSignUp = !isSignUp;
-        updateForm();
+        authTitle.textContent = isSignUp ? "Sign Up" : "Sign In";
+        toggleText.innerHTML = isSignUp 
+            ? `Already have an account? <a href="#">Sign In</a>`
+            : `Don't have an account? <a href="#">Sign Up</a>`;
     });
 
-    authForm.addEventListener("submit", function (event) {
+    authForm.addEventListener("submit", async function (event) {
         event.preventDefault();
-        alert(`${isSignUp ? "Signing Up" : "Signing In"} as ${userType}`);
-        // Here you can add fetch API calls to interact with MySQL backend
-    });
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const user_type = "buyer";  // Change as per selection logic
 
-    updateForm();
+        const endpoint = isSignUp ? "http://127.0.0.1:5000/register" : "http://127.0.0.1:5000/login";
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, user_type })
+        });
+
+        const result = await response.json();
+        alert(result.message || result.error);
+    });
 });
