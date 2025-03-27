@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Dashboard</title>
+    <title>Buyer Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="dashboard.js"></script>
-
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #33ef59, #41dcf7);
+            background: linear-gradient(135deg, #47d768, #21cfea);
             margin: 0;
             padding: 0;
             text-align: center;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 200px auto;
-            background: rgba(86, 243, 75, 0.14);
-            padding: 20px;
+            background: rgba(107, 244, 70, 0.144);
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
@@ -34,22 +33,30 @@
             margin: 10px 0;
             border: none;
             border-radius: 5px;
-            background: #f6f3f3;
-            color: rgb(9, 9, 9);
+            background: #d8dce0;
+            color: rgb(21, 21, 21);
             font-size: 1.2em;
             cursor: pointer;
             transition: background 0.3s;
         }
         .nav-button:hover {
-            background: #395cf7;
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome, Seller!</h1>
-        <button class="nav-button" onclick="viewPastSales()">View Past Sold Items</button>
-        <button class="nav-button" onclick="addNewItem()">Add New Item for Auction</button>
+        <h1>Welcome, Buyer!</h1>
+        <button class="nav-button" onclick="viewPastPurchases()">View Past Bought Items</button>
+        <button class="nav-button" onclick="buyNewItem()">Buy New Item</button>
     </div>
+    <script>
+        function viewPastPurchases() {
+            window.location.href = "view_past_bought.html";
+        }
+        function buyNewItem() {
+            window.location.href = "buy_new_item.html";
+        }
+    </script>
 </body>
 </html>

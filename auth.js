@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        const user_type = "buyer";  // Change as per selection logic
+        const user_type = "seller"; // Change as per selection logic
 
         const endpoint = isSignUp ? "http://127.0.0.1:5000/register" : "http://127.0.0.1:5000/login";
         const response = await fetch(endpoint, {
@@ -33,9 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Redirect based on user type
         if (result.success) {
             if (result.role === 'seller') {
-                window.location.href = "seller_dashboard.html";
+                window.location.href = "seller_dashboard.html";  // Redirect seller to dashboard
             } else {
-                window.location.href = "buyer_dashboard.html";
+                window.location.href = "buyer_dashboard.html";  // Redirect buyer to their page
             }
         }
     });
