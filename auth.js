@@ -3,6 +3,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const toggleText = document.getElementById("toggle-text");
     const authTitle = document.getElementById("auth-title");
 
+    // Get the 'type' query parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const userType = urlParams.get('type');  // 'buyer' or 'seller'
+    
+    // If no 'type' parameter is provided or invalid type, handle it
+    if (!userType || (userType !== 'buyer' && userType !== 'seller')) {
+        alert("Invalid or missing user type!");
+        return;  // Optionally, redirect to a safe page or show an error
+    }
+
     let isSignUp = false;
 
     toggleText.addEventListener("click", function (event) {
@@ -24,22 +34,38 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch(endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password, user_type })
+            body: JSON.stringify({ username, password, user_type }),
+            mode: "cors"
         });
 
         const result = await response.json();
-        alert(result.message || result.error);
+        
 
         console.log(result);
+        console.log(userType);
         // Redirect based on user type
         if (result.success) {
-            console.log("success");
-            if (result.role === 'seller') {
-                console.log('seller')
-                window.location.href = "seller_dashboard.html";  // Redirect seller to dashboard
-            } else {
-                
-                window.location.href = "buyer_dashboard.html";  // Redirect buyer to their page
+            if (!isSignUp){
+                if (result.role === userType && userType === 'seller') {
+                    console.log('seller')
+                    alert(result.message || result.error);
+                    window.location.href = "seller_dashboard.html";  // Redirect seller to dashboard
+                } else if (result.role === userType && userType === 'buyer'){
+                    console.log('buyer')
+                    alert(result.message || result.error);
+                    window.location.href = "buyer_dashboard.html";  // Redirect buyer to their page
+                }
+                else{
+                    alert("Unauthorized!!")
+                }
+            }else{
+                alert("User Created successfully!")
+            }
+        }else{
+            if(isSignUp){
+                alert("Sign Up Failed!")
+            }else{
+                alert("Login Failed!")
             }
         }
     });
