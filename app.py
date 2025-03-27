@@ -27,9 +27,9 @@ def register():
     try:
         cursor.execute("INSERT INTO users (username, password, user_type) VALUES (%s, %s, %s)", (username, password, user_type))
         db.commit()
-        return jsonify({"message": "User registered successfully!"}), 201
+        return jsonify({"success": True, "message": "Login successful", "role": user_type}), 201
     except mysql.connector.Error as err:
-        return jsonify({"error": str(err)}), 400
+        return jsonify({"success": False, "error": str(err)}), 400
 
 # Login user
 @app.route("/login", methods=["POST"])
@@ -42,9 +42,9 @@ def login():
     user = cursor.fetchone()
 
     if user and bcrypt.check_password_hash(user[0], password):
-        return jsonify({"message": "Login successful!"}), 200
+        return jsonify({"success": True, "message": "Login successful", "role": user[1]}), 200
     else:
-        return jsonify({"error": "Invalid username or password"}), 401
+        return jsonify({"success": False, "error": "Invalid credentials"}), 401
 
 if __name__ == "__main__":
     app.run(debug=True)

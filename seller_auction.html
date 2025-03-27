@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller's Bidding Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Seller Dashboard</h2>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="seller_auction.html">Active Auctions</a></li>
+                <li><a href="logout.html">Logout</a></li>
+            </ul>
+        </aside>
+        
+        <main class="content">
+            <h2>Active Auctions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Starting Price</th>
+                        <th>Current Bid</th>
+                        <th>Bidders</th>
+                        <th>End Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="auction-list">
+                    <!-- Auction items will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+    
+    <script src="seller_auction.js"></script>
+</body>
+</html>

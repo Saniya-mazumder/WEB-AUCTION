@@ -8,8 +8,8 @@ CORS(app)
 
 # MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'  
-app.config['MYSQL_PASSWORD'] = '12345' 
+app.config['MYSQL_USER'] = 'root'  # Change if necessary
+app.config['MYSQL_PASSWORD'] = '12345'  # Change if necessary
 app.config['MYSQL_DB'] = 'auction_db'
 
 mysql = MySQL(app)
@@ -52,11 +52,11 @@ def add_item():
         return jsonify({"error": str(e)}), 500
 
 # Fetch Active Auction Items
-@app.route('/get-active-auctions', methods=['GET'])
-def get_active_auctions():
+@app.route('/get-items', methods=['GET'])
+def get_items():
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, product_name, quantity, price, duration FROM auction_items WHERE duration > 0")
+        cur.execute("SELECT id, product_name, quantity, price, duration FROM auction_items")
         items = cur.fetchall()
         cur.close()
         
@@ -85,21 +85,37 @@ def place_bid():
     try:
         data = request.json
         item_id = data['item_id']
+        new_price = data['new_price']
+        bidder = data['bidder']
         
         cur = mysql.connection.cursor()
-        cur.execute("SELECT price FROM auction_items WHERE id = %s", (item_id,))
-        current_price = cur.fetchone()
-        
-        if not current_price:
-            return jsonify({"error": "Item not found"}), 404
-        
-        new_price = current_price[0] + 100  # Increment price by 100
-        
-        cur.execute("UPDATE auction_items SET price = %s WHERE id = %s", (new_price, item_id))
+        cur.execute("UPDATE auction_items SET price = %s, highest_bidder = %s WHERE id = %s", (new_price, bidder, item_id))
         mysql.connection.commit()
         cur.close()
         
         return jsonify({"message": "Bid placed successfully!", "new_price": new_price})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Approve Bid (Seller finalizing the auction)
+@app.route('/approve-bid', methods=['POST'])
+def approve_bid():
+    try:
+        data = request.json
+        item_id = data['item_id']
+        
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT highest_bidder FROM auction_items WHERE id = %s", (item_id,))
+        highest_bidder = cur.fetchone()[0]
+        
+        if not highest_bidder:
+            return jsonify({"error": "No bids to approve"}), 400
+        
+        cur.execute("UPDATE auction_items SET status = 'sold' WHERE id = %s", (item_id,))
+        mysql.connection.commit()
+        cur.close()
+        
+        return jsonify({"message": "Bid approved successfully!"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -30,11 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = await response.json();
         alert(result.message || result.error);
 
+        console.log(result);
         // Redirect based on user type
         if (result.success) {
+            console.log("success");
             if (result.role === 'seller') {
+                console.log('seller')
                 window.location.href = "seller_dashboard.html";  // Redirect seller to dashboard
             } else {
+                
                 window.location.href = "buyer_dashboard.html";  // Redirect buyer to their page
             }
         }
