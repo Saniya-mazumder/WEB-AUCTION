@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Auction</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="auction.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <button onclick="goBack()" class="back-btn">⬅ Go Back</button>
+            <h3>Other Buyers</h3>
+            <ul id="buyers-list">
+                <!-- Buyers will be dynamically inserted here -->
+            </ul>
+        </div>
+
+        <!-- Auction Items -->
+        <div class="auction-area">
+            <h2>Live Auctions</h2>
+            <div class="auction-grid" id="auction-grid">
+                <!-- Auction items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
