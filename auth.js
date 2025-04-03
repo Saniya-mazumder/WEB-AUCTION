@@ -28,21 +28,24 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        const user_type = "seller"; // Change as per selection logic
+        const user_type = userType; // Change as per selection logic
 
         const endpoint = isSignUp ? "http://127.0.0.1:5000/register" : "http://127.0.0.1:5000/login";
+        try{
         const response = await fetch(endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password, user_type }),
             mode: "cors"
         });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
         const result = await response.json();
         
 
         console.log(result);
-        console.log(userType);
         // Redirect based on user type
         if (result.success) {
             if (!isSignUp){
@@ -68,5 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Login Failed!")
             }
         }
+    }catch (error) {
+        console.error("Error during fetch operation:", error);
+        alert("An error occurred. Please try again.");
+    }
     });
 });
