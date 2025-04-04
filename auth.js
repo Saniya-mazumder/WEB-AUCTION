@@ -50,13 +50,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if (result.success) {
             if (!isSignUp){
                 if (result.role === userType && userType === 'seller') {
-                    console.log('seller')
+                    // Store user information
+                    localStorage.setItem("username", result.username); // Store the user ID
+                    localStorage.setItem("userType", userType);     // Store the user type
+                    
                     alert(result.message || result.error);
-                    window.location.href = "seller_dashboard.html";  // Redirect seller to dashboard
+                    window.location.href = "seller_dashboard.html";
                 } else if (result.role === userType && userType === 'buyer'){
-                    console.log('buyer')
+                    // Store user information
+                    localStorage.setItem("username", result.username); // Store the user ID
+                    localStorage.setItem("userType", userType);     // Store the user type
+                    
                     alert(result.message || result.error);
-                    window.location.href = "buyer_dashboard.html";  // Redirect buyer to their page
+                    window.location.href = "buyer_dashboard.html";
                 }
                 else{
                     alert("Unauthorized!!")
