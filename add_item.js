@@ -7,6 +7,7 @@ document.getElementById('add-item-form').addEventListener('submit', async functi
     const address = document.getElementById('address').value;
     const phone = document.getElementById('phone').value;
     const duration = document.getElementById('duration').value;
+    const username = localStorage.getItem("username");
 
     const data = {
         product_name: productName,
@@ -14,8 +15,10 @@ document.getElementById('add-item-form').addEventListener('submit', async functi
         price: price,
         address: address,
         phone: phone,
-        duration: duration
+        duration: duration,
+        username: username
     };
+    console.log(data);
 
     try {
         const response = await fetch('http://127.0.0.1:5000/add-item', {
