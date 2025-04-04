@@ -87,7 +87,7 @@ def login():
         logging.error(f"Error during login: {str(e)}")
         return jsonify({"success": False, "error": "Internal server error"}), 500
 
-# Add Item to Auction
+# Add Item to Auction (Updated)
 @app.route('/add-item', methods=['POST'])
 def add_item():
     data = request.json
@@ -97,13 +97,23 @@ def add_item():
     address = data['address']
     phone = data['phone']
     duration = data['duration']
+    username = data['username']  # Get the seller's username
     
     try:
+        # Get the seller's ID
+        g.cursor.execute("SELECT id FROM users WHERE username = %s AND user_type = 'seller'", (username,))
+        seller_result = g.cursor.fetchone()
+        
+        if not seller_result:
+            return jsonify({"error": "Seller not found or user is not a seller"}), 404
+        
+        seller_id = seller_result[0]
+        
         query = """
-            INSERT INTO auction_items (product_name, quantity, price, address, phone, duration, created_at)
-            VALUES (%s, %s, %s, %s, %s, %s, NOW())
+            INSERT INTO auction_items (product_name, quantity, price, address, phone, duration, created_at, seller_id)
+            VALUES (%s, %s, %s, %s, %s, %s, NOW(), %s)
         """
-        g.cursor.execute(query, (product_name, quantity, price, address, phone, duration))
+        g.cursor.execute(query, (product_name, quantity, price, address, phone, duration, seller_id))
         g.db.commit()
 
         return jsonify({"message": "Item added successfully!"}), 200
@@ -226,6 +236,51 @@ def place_bid():
         return jsonify({"message": "Bid placed successfully!", "new_price": new_price})
     except Exception as e:
         logging.error(f"Error placing bid: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+# Get Past Sold Items for a Seller
+@app.route('/past-sold-items', methods=['GET'])
+def past_sold_items():
+    try:
+        username = request.args.get('username')
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
+            
+        # First, get the user_id from the username
+        g.cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user_result = g.cursor.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "User not found"}), 404
+            
+        user_id = user_result[0]
+        
+        # Query to get items that have been sold by this user
+        query = """
+            SELECT ai.id, ai.product_name, ai.price, ai.quantity, ai.updated_at as sold_date,
+                   u.username as buyer_username
+            FROM auction_items ai
+            LEFT JOIN users u ON ai.highest_bidder = u.id
+            WHERE ai.status = 'sold' AND ai.seller_id = %s
+            ORDER BY ai.updated_at DESC
+        """
+        g.cursor.execute(query, (user_id,))
+        items = g.cursor.fetchall()
+        
+        item_list = []
+        for item in items:
+            item_data = {
+                "id": item[0],
+                "product_name": item[1],
+                "price": item[2],
+                "quantity": item[3],
+                "sold_date": item[4].isoformat() if item[4] else None,
+                "buyer": item[5] if item[5] else "Unknown"
+            }
+            item_list.append(item_data)
+        return jsonify(item_list)
+    except Exception as e:
+        logging.error(f"Error fetching past sold items: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
