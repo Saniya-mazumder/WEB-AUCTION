@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Sold Items</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="view_past_sales.js"></script>
+
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #2580f0, #eecc4e);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Glassmorphism Table Container */
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 800px;
+            overflow-x: auto;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Back Button */
+        .back-btn {
+            margin-top: 20px;
+            text-decoration: none;
+            background: linear-gradient(90deg, #ff5733, #ff914d);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Past Sold Items</h1>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Buyer</th>
+                    <th>Sale Date</th>
+                </tr>
+            </thead>
+            <tbody id="sold-items">
+                <!-- Data will be inserted dynamically here -->
+            </tbody>
+        </table>
+    </div>
+    <a href="seller_dashboard.html" class="back-btn">Back to Dashboard</a>
+</body>
+</html>
