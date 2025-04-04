@@ -71,8 +71,15 @@ def login():
         user = g.cursor.fetchone()
 
         if user and bcrypt.check_password_hash(user[0], password):
-            response = jsonify({"success": True, "message": "Login successful", "role": user[1]})
-            app.logger.debug(f"Login response: {response.get_data()}")
+            g.cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+            user_id = g.cursor.fetchone()[0]
+            response = jsonify({
+                "success": True, 
+                "message": "Login successful", 
+                "role": user[1], 
+                "user_id": user_id,
+                "username": username 
+            })
             return response, 200
         else:
             return jsonify({"success": False, "error": "Invalid credentials"}), 401
@@ -130,22 +137,6 @@ def get_buyers():
         logging.error(f"Error fetching buyers: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-# Place a Bid
-@app.route('/place-bid', methods=['POST'])
-def place_bid():
-    try:
-        data = request.json
-        item_id = data['item_id']
-        new_price = data['new_price']
-        bidder = data['bidder']
-        
-        g.cursor.execute("UPDATE auction_items SET price = %s, highest_bidder = %s WHERE id = %s", (new_price, bidder, item_id))
-        g.db.commit()
-        
-        return jsonify({"message": "Bid placed successfully!", "new_price": new_price})
-    except Exception as e:
-        logging.error(f"Error placing bid: {str(e)}")
-        return jsonify({"error": str(e)}), 500
 
 # Approve Bid (Seller finalizing the auction)
 @app.route('/approve-bid', methods=['POST'])
@@ -166,6 +157,75 @@ def approve_bid():
         return jsonify({"message": "Bid approved successfully!"})
     except Exception as e:
         logging.error(f"Error approving bid: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+# Get Past Bought Items for a User
+@app.route('/past-bought-items', methods=['GET'])
+def past_bought_items():
+    try:
+        username = request.args.get('username')
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
+            
+        # First, get the user_id from the username
+        g.cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user_result = g.cursor.fetchone()
+        
+        if not user_result:
+            return jsonify({"error": "User not found"}), 404
+            
+        user_id = user_result[0]
+        
+        # Query to get items that have been purchased by this user
+        query = """
+            SELECT ai.product_name, ai.price, ai.quantity, ai.updated_at as purchase_date
+            FROM auction_items ai
+            WHERE ai.status = 'sold' AND ai.highest_bidder = %s
+        """
+        g.cursor.execute(query, (user_id,))
+        items = g.cursor.fetchall()
+        
+        item_list = [
+            {
+                "product_name": item[0], 
+                "price": item[1], 
+                "quantity": item[2], 
+                "purchase_date": item[3].isoformat() if item[3] else None
+            } 
+            for item in items
+        ]
+        
+        return jsonify(item_list)
+    except Exception as e:
+        logging.error(f"Error fetching past bought items: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+# Place a Bid
+@app.route('/place-bid', methods=['POST'])
+def place_bid():
+    try:
+        data = request.json
+        item_id = data['item_id']
+        new_price = data['new_price']
+        bidder_username = data['bidder']
+        
+        # First, get the user_id from the username
+        g.cursor.execute("SELECT id FROM users WHERE username = %s", (bidder_username,))
+        user_result = g.cursor.fetchone()
+        
+        if not user_result:
+            return jsonify({"error": "Bidder not found"}), 404
+        
+        bidder_id = user_result[0]  # Get the numeric ID
+        
+        # Now update the auction item with the numeric ID
+        g.cursor.execute("UPDATE auction_items SET price = %s, highest_bidder = %s WHERE id = %s", 
+                        (new_price, bidder_id, item_id))
+        g.db.commit()
+        
+        return jsonify({"message": "Bid placed successfully!", "new_price": new_price})
+    except Exception as e:
+        logging.error(f"Error placing bid: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
