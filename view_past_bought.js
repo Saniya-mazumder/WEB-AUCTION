@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const userId = localStorage.getItem("userId");  // Assuming user ID is stored on login
-    if (!userId) {
+    const username = localStorage.getItem("username");  // Store username on login too
+    if (!username) {
         alert("User not logged in.");
-        window.location.href = "auth.html";
+        window.location.href = "auth.html?type=buyer";
         return;
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/past-bought-items?user_id=${userId}`);
+        const response = await fetch(`http://127.0.0.1:5000/past-bought-items?username=${username}`);
         const data = await response.json();
+        console.log(data);
         
         const tableBody = document.getElementById("bought-items");
         tableBody.innerHTML = ""; // Clear previous data
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <td>${item.product_name}</td>
                 <td>${item.price} USD</td>
                 <td>${item.quantity}</td>
-                <td>${new Date(item.purchase_date).toLocaleDateString()}</td>
+                <td>${item.purchase_date ? new Date(item.purchase_date).toLocaleDateString() : 'N/A'}</td>
             `;
             tableBody.appendChild(row);
         });
