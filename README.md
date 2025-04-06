@@ -79,13 +79,22 @@ python app.py
 5️⃣ Open the Website with Live Server  
 - In VS Code, right-click on welcome.html.  
 - Select "Open with Live Server".  
+#### 6. Import SQL Files into MySQL
+# ---------------------------------------
 
-✅ The Web Auction System will now run smoothly in your browser! 🎉  
+Make sure MySQL is installed and running
 
-🔹 If "Live Server" is Not Installed  
-- Open welcome.html in VS Code.  
-- Look at the bottom-right corner of the VS Code window.  
-- Click on "Go Live" to start the server.  
+🛠️ Create database (optional if not already created)
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS auction_system;"
+
+ 📥 Import the complete schema (includes users, auction_items, and purchase_requests)
+mysql -u root -p auction_system < export.sql
+
+OR import only auction_items table
+ mysql -u root -p auction_system < auction_items.sql
+
+✅ SQL tables will now be available in the auction_system DB
+
 
 🔹 If you don’t see "Go Live," install the Live Server extension from the VS Code Extensions Marketplace.  
 
@@ -93,6 +102,9 @@ python app.py
 
 📌 Notes  
 - Ensure MySQL is installed and running before using the platform.  
-- If you face any issues, try restarting VS Code and repeating the steps.  
+- If you face any issues, try restarting VS Code and repeating the steps.
+- Make sure MySQL is in your system PATH or use full path to mysqldump/mysql commands
+- If errors occur, restart VS Code or recheck installation steps
+- You can manage SQL with MySQL Workbench, phpMyAdmin, or CLI
 
 Enjoy your Web Auction System! 🚀
